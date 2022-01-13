@@ -1,10 +1,20 @@
 import base64, json
 import requests
+import spotipy
+from spotipy import oauth2
 
 CLIENT_ID = 'dc57f4d2e2f144bda26caaeabb73fa00'
 CLIENT_SECRET = '88e3cc5852b6428388cce8340b77a800'
-SCOPES = 'playlist-modify-public'
+SCOPE = 'user-library-read playlist-modify-private playlist-read-collaborative playlist-read-private playlist-modify-public user-library-modify user-library-read app-remote-control user-read-playback-position user-top-read user-read-recently-played user-read-playback-state user-modify-playback-state user-read-currently-playing'
+REDIRECT_URI = 'http://localhost:8080'
 authUrl = "https://accounts.spotify.com/api/token"
+PORT_NUMBER = 8080
+PLAYLIST_ID = '6LJddwXIEe9S0uxzSNePPk'
+CACHE = '.spotipyoauthcache'
+
+sp_oauth = oauth2.SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=SCOPE,
+                               open_browser=True, cache_path=CACHE)
+sp = spotipy.client.Spotify(oauth_manager=sp_oauth)
 
 authHeader = {}
 authData = {}
@@ -35,16 +45,22 @@ def getTrack(token, artist, title):
     track_object = res.json()
     song_ID = track_object['tracks']['items'][0]['id']
 
-    print(json.dumps(track_object, indent=2))
     return song_ID
 
 
-token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
-artist = "Linkin Park"
-title = "Numb"
+def add_to_playlist(playlist_id, tracks):
+    sp.playlist_add_items(playlist_id=playlist_id, items=tracks)
 
-track = getTrack(token, artist, title)
 
-print(token)
+def find_track_and_add_to_playlist(artist, title):
+    token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
+    tracks = [getTrack(token, artist, title)]
+    add_to_playlist(PLAYLIST_ID, tracks)
+    sp.next_track()
 
-print(track)
+
+artist = input("Please enter an artist ")
+song = input("Please enter a song by the artist ")
+print(f'Added "{artist}" with "{song}" to your playlist on Spotify!')
+
+find_track_and_add_to_playlist(artist, song)
