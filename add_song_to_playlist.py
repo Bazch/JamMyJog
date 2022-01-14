@@ -1,4 +1,6 @@
 import base64, json
+import time
+
 import requests
 import spotipy
 from spotipy import oauth2
@@ -56,11 +58,8 @@ def find_track_and_add_to_playlist(artist, title):
     token = getAccessToken(CLIENT_ID, CLIENT_SECRET)
     tracks = [getTrack(token, artist, title)]
     add_to_playlist(PLAYLIST_ID, tracks)
+    time.sleep(1)
     sp.next_track()
 
 
-artist = input("Please enter an artist ")
-song = input("Please enter a song by the artist ")
-print(f'Added "{artist}" with "{song}" to your playlist on Spotify!')
 
-find_track_and_add_to_playlist(artist, song)
