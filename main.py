@@ -1,9 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import find_song
 import time
 import requests
 
 hostName = "localhost"
 serverPort = 8080
+genres = ['hip hop', 'r&b']
 
 class MyServer(BaseHTTPRequestHandler):
 
@@ -54,7 +56,8 @@ class MyServer(BaseHTTPRequestHandler):
     def do_POST(self):
         self._set_response()
         content_length = int(self.headers['Content-Length'])
-        print(self.rfile.read(content_length).decode("utf-8"))
+        bpm = self.rfile.read(content_length).decode("utf-8")
+        find_song.final_final_final(bpm, genres)
 
 
 

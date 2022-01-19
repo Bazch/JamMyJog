@@ -11,7 +11,7 @@ SCOPE = 'user-library-read playlist-modify-private playlist-read-collaborative p
 REDIRECT_URI = 'http://localhost:8080'
 authUrl = "https://accounts.spotify.com/api/token"
 PORT_NUMBER = 8080
-PLAYLIST_ID = '6LJddwXIEe9S0uxzSNePPk'
+PLAYLIST_ID = '14CyMjWKnsnOulk6t8DqTy'
 CACHE = '.spotipyoauthcache'
 
 sp_oauth = oauth2.SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope=SCOPE,
