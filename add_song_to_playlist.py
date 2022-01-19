@@ -8,9 +8,8 @@ from spotipy import oauth2
 CLIENT_ID = 'dc57f4d2e2f144bda26caaeabb73fa00'
 CLIENT_SECRET = '88e3cc5852b6428388cce8340b77a800'
 SCOPE = 'user-library-read playlist-modify-private playlist-read-collaborative playlist-read-private playlist-modify-public user-library-modify user-library-read app-remote-control user-read-playback-position user-top-read user-read-recently-played user-read-playback-state user-modify-playback-state user-read-currently-playing'
-REDIRECT_URI = 'http://localhost:8080'
+REDIRECT_URI = 'http://127.0.0.1:5000/slider/'
 authUrl = "https://accounts.spotify.com/api/token"
-PORT_NUMBER = 8080
 PLAYLIST_ID = '14CyMjWKnsnOulk6t8DqTy'
 CACHE = '.spotipyoauthcache'
 

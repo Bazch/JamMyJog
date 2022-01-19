@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hi-Fi prototype</title>
+    <script src="../static/front.js"></script>
+</head>
+<body>
+<p><span id="bpmSliderText">%SLIDERVALUE%</span></p>
+<p><input type="range" id="bpmSlider" onchange="updateSlider(this)" min="0", max="300" value="%SLIDERVALUE%" step="1" class="slider"></p>
+<p>Slide to adjust BPM</p>
+</body>
+</html>

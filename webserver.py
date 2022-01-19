@@ -1,9 +1,14 @@
 from __future__ import print_function
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import spotipy
+from flask import Flask
 from spotipy import oauth2
 from spotipy.oauth2 import SpotifyClientCredentials
 import find_song
+
+import flask
+
+
 
 SPOTIPY_CLIENT_ID = 'dc57f4d2e2f144bda26caaeabb73fa00'
 SPOTIPY_CLIENT_SECRET = '88e3cc5852b6428388cce8340b77a800'
@@ -22,46 +27,50 @@ song = sp.search(q='artist: Linkin Park track: Numb')
 genres = ['progressive house']
 
 
+
 class helloHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        print(self.path)
         if self.path == "/slider":
             print(self.path)
             self.display_slider()
             return
-        self.send_response(200)
-        self.send_header('content-type', 'text/html')
-        self.end_headers()
-        str = "<a href='" + sp_oauth.get_authorize_url() + "'>Login to Spotify</a>"
-        self.wfile.write(str.encode())
+        elif self.path == "/":
+            self.send_response(200)
+            self.send_header('content-type', 'text/html')
+            self.end_headers()
+            str = "<a href='" + sp_oauth.get_authorize_url() + "'>Login to Spotify</a></br>"
+            str += "<input type=\"button\" onclick=\"goToSlider()\" value=\"Navigate to slider\"></input>"
+            self.wfile.write(str.encode())
+        elif self.path == "/static/front.js":
+            self.send_response(200)
+            self.send_header('Content-type', 'text/javascript')
+            self.end_headers()
+            f = open("static/front.js", "rb")
+            for each_line in f:
+                self.wfile.write(each_line)
+            return
+        else:
+            self._set_response()
 
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+
     def display_slider(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
         output = ''
-        output += "<html><head><title>Barry's Hi-Fi prototype</title></head>"
+        output += "<html><head><title>Barry's Hi-Fi prototype</title>"
+        output += "<script type=\"text/javascript\" charset=\"utf8\" src=\"static/front.js\"></script></head>"
         output += "<p>Request: %s</p>" % self.path
         output += "<body>"
         output += "<p><span id=\"textSliderValue\">%SLIDERVALUE%</span></p>"
         output += "<p><input type=\"range\" onchange=\"updateSliderPWM(this)\" id=\"pwmSlider\" min=\"0\" max=\"255\" value=\"%SLIDERVALUE%\" step=\"1\" class=\"slider\"></p>"
         output += "<p>Slide to adjust BPM</p>"
-        output += "<script>"
-        output += "document.getElementById(\"pwmSlider\").addEventListener(\"input\", function(){"
-        output +=   "var sliderValue = document.getElementById(\"pwmSlider\").value;"
-        output +=   "document.getElementById(\"textSliderValue\").innerHTML = sliderValue;"
-        output += "});"
-        output += "function updateSliderPWM(element) {"
-        output +=   "var sliderValue = document.getElementById(\"pwmSlider\").value;"
-        output +=   "console.log(sliderValue);"
-        output +=   "var xhr = new XMLHttpRequest();"
-        output +=   "xhr.open(\"POST\", \"/slider?value=\"+sliderValue, true);"
-        output +=   "xhr.send(sliderValue); }"
-        output += "</script>"
         output += "</body><html>"
         self.wfile.write(output.encode("utf-8"))
 
